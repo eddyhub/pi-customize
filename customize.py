@@ -25,14 +25,15 @@ authorized_keys_file_path = dot_ssh_dir_path + "/authorized_keys"
 
 pi_password = "hansemerkur"
 pi_authorized_ssh_keys = [
-    "ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAABAQDjhHGeQ5iw1CxHAH8sXT8QmOqL0JzfpVx4LPfwgoo5ahGzerhwfQ8GL2gs4Z2gPfnnEUnkyRxfORMyaS0GMZZlCVAjzS9jhDk/LPnR577OK+9vcoPjGtdcR0TOr2JQ6MoUUF5Q+Thoed/iBbenhrGsBnspL9HeqCijHP0GBezZnWzx6fggwTuUEFwEFIrVwV55eUS+7lBxqMGa2zsG1A+L/meYvkig+1BTqk9zHoQmcchigOAE9RTy56B9skFDqSF75nxQqoePBDGX0qadnxFnRrSde8rICRpA8pqDuacHS9VdXDjBWy+kujiOQX/CMrN04XrMdpY6bBlTvxkOedrV root@d8e09e32146b",
+    "ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAABAQC9yGPJr/7jBDg4vpL0dOjrcIewcyHw2fxGtrJ+w4AEdcNGk8B0p00W4IzV7ISUEdmtGfV0fCi7GQiDl/zdTrgmQHKRRHTCHIyZzwZCB1x1zgElWW0v6dNRVl1dJn9cWI/EHfUh/8xU1S2JUHKtt1oImA92FjnxglUr5fystZFHkA1r1J1pMB6sY9OgXouLFgRsKB4vwacTJ0DWkr9ZiHU+0c0yEtaA3PAXhDMIJhgZ3ektJp6dFNL28TarY8xuPHh5y5gdRVYFngU3U1V764Gl7ydebK7QF31FfEFyyL8CdR4poBawGWUjN2xsKkrI0cduikf9GFlO3WLvlpyflqP7 edi@edi",
 ]
 
 hansemerkur_config_dir_path = mount_root_path + "/usr/share/hansemerkur"
-desktop_config_file_path = mount_root_path + "/etc/xdg/pcmanfm/LXDE-pi/desktop-items-0.conf"
+desktop_config_file_path = pi_home_dir_path + "/.config/pcmanfm/LXDE-pi/desktop-items-0.conf"
 keyboard_config_file_path = mount_root_path + "/etc/default/keyboard"
-locale_config_file_path = mount_root_path + "/etc/locale.gen"
-
+locale_gen_config_file_path = mount_root_path + "/etc/locale.gen"
+locale_config_file_path = mount_root_path + "/etc/default/locale"
+locale_archive_file_path = mount_root_path + "/usr/lib/locale/locale-archive"
 
 def generate_password(password):
     return crypt.crypt(password, crypt.mksalt(crypt.METHOD_SHA512))
@@ -75,8 +76,11 @@ copy_file(".gitconfig", os.path.join(pi_home_dir_path, ".gitconfig"), 0o644, pi_
 # copy wallpaper to pi
 copy_file("wallpaper.png", os.path.join(hansemerkur_config_dir_path, "wallpaper.png"), 0o644, root_uid, root_gid)
 # set wallpaper as default
-copy_file("desktop-items-0.conf", desktop_config_file_path, 0o644, root_uid, root_gid)
+copy_file("desktop-items-0.conf", desktop_config_file_path, 0o644, pi_uid, pi_gid)
+
 # set locale keyboard to de
 copy_file("keyboard", keyboard_config_file_path, 0o644, root_uid, root_gid)
 # set locale to de_DE
-copy_file("locale.gen", locale_config_file_path, 0o644, root_uid, root_gid)
+copy_file("locale.gen", locale_gen_config_file_path, 0o644, root_uid, root_gid)
+copy_file("locale", locale_config_file_path, 0o644, root_uid, root_gid)
+copy_file("locale-archive", locale_archive_file_path, 0o644, root_uid, root_gid)
